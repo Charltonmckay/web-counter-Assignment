@@ -50,7 +50,7 @@ jobs:
           push: true # Push image to Docker Hub
           tags: username/webcounter-backend:${{ github.sha }} # Tag image with commit SHA
 
-      - name: Build and push frontend image # Build and push the frontend Docker image
+      - name: Build and push frontend image #Build and push the frontend Docker image
         uses: docker/build-push-action@v2
         with:
           context: . # Current directory
