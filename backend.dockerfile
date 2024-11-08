@@ -1,7 +1,7 @@
 FROM python:3.13.0
  
 # cd in folder
-WORKDIR /usr/src/app
+#WORKDIR /usr/src/app
  
 COPY web-counter/requirements.txt .
  
