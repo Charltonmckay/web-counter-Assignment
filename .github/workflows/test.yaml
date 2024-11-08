@@ -46,7 +46,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: . # Current directory
-          file: . backend.dockerfile # Path to backend Dockerfile
+          file: web-counter-Assignment/frontend.dockerfile # Path to backend Dockerfile
           push: true # Push image to Docker Hub
           tags: username/webcounter-backend:${{ github.sha }} # Tag image with commit SHA
 
@@ -54,6 +54,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: . # Current directory
-          file: . frontend.dockerfile # Path to frontend Dockerfile
+          file: web-counter-Assignment/frontend.dockerfile # Path to frontend Dockerfile
           push: true # Push image to Docker Hub
           tags: username/webcounter-frontend:${{ github.sha }} # Tag image with commit SHA
