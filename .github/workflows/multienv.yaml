@@ -1,0 +1,55 @@
+name: Multi-Stage Deployment Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [development, integration, qa, production]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 1: Login to Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Step 2: Build and Tag Docker Image Based on Environment
+      - name: Build Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./backend.dockerfile
+          push: true
+          tags: charltonmckay92/webcounter-backend:${{ matrix.environment }}
+
+      # Step 3: Deploy to Specific Environment
+      - name: Deploy to ${{ matrix.environment | title }}
+        if: ${{ github.ref == 'refs/heads/main' }}
+        env:
+          ENVIRONMENT: ${{ matrix.environment }}
+        run: |
+          echo "Deploying to $ENVIRONMENT environment"
+          # Simulate deployment with different steps per environment
+          if [ "$ENVIRONMENT" == "development" ]; then
+            echo "Deploying to Development"
+            # Additional deployment commands for Development
+          elif [ "$ENVIRONMENT" == "integration" ]; then
+            echo "Deploying to Integration"
+            # Additional deployment commands for Integration
+          elif [ "$ENVIRONMENT" == "qa" ]; then
+            echo "Deploying to QA"
+            # Additional deployment commands for QA
+          elif [ "$ENVIRONMENT" == "production" ]; then
+            echo "Deploying to Production"
+            # Additional deployment commands for Production
+          fi
