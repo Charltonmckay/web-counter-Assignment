@@ -1,0 +1,36 @@
+name: Release - Tag and Push Images
+
+# Trigger workflow on GitHub releases
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-and-push-release-images:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push backend release image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./backend.dockerfile
+          push: true
+          tags: charltonmckay92/webcounter-backend:${{ github.event.release.tag_name }}
+
+      - name: Build and push frontend release image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./frontend.dockerfile
+          push: true
+          tags: charltonmckay92/webcounter-frontend:${{ github.event.release.tag_name }}
